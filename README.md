@@ -1,0 +1,1 @@
+This repository contains Technical interview questions at alx school 
