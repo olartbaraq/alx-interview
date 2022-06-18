@@ -1,4 +1,4 @@
-#!/bin/usr/pyhton3
+#!/usr/bin/python3
 '''
   Pascal's Triangle.
 '''
