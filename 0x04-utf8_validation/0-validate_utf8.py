@@ -10,6 +10,9 @@ def validUTF8(data):
     integer is a valid UTF8 caharacter
     """
     def length(n):
+        """returns the length of the binary code
+        converted from integer
+        """
         return len('{:08b}'.format(n).split('0', 1)[0])
 
     i = 0
