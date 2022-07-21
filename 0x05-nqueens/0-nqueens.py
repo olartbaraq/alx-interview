@@ -1,63 +1,73 @@
 #!/usr/bin/python3
-
+""" N QUEENS ALGORITHM WITH BACKTRACKING (RECURSION INSIDE LOOP) """
 import sys
 
 
-N = sys.argv[1]
+class NQueen:
+    """ Class for solving N Queen Problem """
+
+    def __init__(self, n):
+        """ Global Variables """
+        self.n = n
+        self.x = [0 for i in range(n + 1)]
+        self.res = []
+
+    def place(self, k, i):
+        """ Checks if k Queen can be placed in i column (True)
+        or if the are attacking queens in row or diagonal (False)
+        """
+
+        # j checks from 1 to k - 1 (Up to previous queen)
+        for j in range(1, k):
+            # There is already a queen in column
+            # or a queen in same diagonal
+            if self.x[j] == i or \
+               abs(self.x[j] - i) == abs(j - k):
+                return 0
+        return 1
+
+    def nQueen(self, k):
+        """ Tries to place every queen in the board
+        Args:
+        k: starting queen from which to evaluate (should be 1)
+        """
+        # i goes from column 1 to column n (1st column is 1st index)
+        for i in range(1, self.n + 1):
+            if self.place(k, i):
+                # Queen can be placed in i column
+                self.x[k] = i
+                if k == self.n:
+                    # Placed all 4 Queens (A solution was found)
+                    solution = []
+                    for i in range(1, self.n + 1):
+                        solution.append([i - 1, self.x[i] - 1])
+                    self.res.append(solution)
+                else:
+                    # Need to place more Queens
+                    self.nQueen(k + 1)
+        return self.res
+
+
+# Main
 
 if len(sys.argv) != 2:
-    print('Usage: nqueens N')
+    print("Usage: nqueens N")
     sys.exit(1)
+
+N = sys.argv[1]
 
 try:
     N = int(N)
-    if N < 4:
-        print("N must be at least 4")
-        sys.exit(1)
 except ValueError:
     print("N must be a number")
     sys.exit(1)
 
+if N < 4:
+    print("N must be at least 4")
+    sys.exit(1)
 
-def nqueens(N, rows, negD, posD, col_no, row_no, ret_list):
-    """returns a list of list of strings"""
-    while col_no < N:
-        placed = False
-        while row_no < N:
-            if row_no in rows or (row_no - col_no) in negD\
-                    or (row_no + col_no) in posD:
-                row_no += 1
-            else:
-                rows.add(row_no)
-                negD.add(row_no - col_no)
-                posD.add(row_no + col_no)
-                ret_list.append([col_no, row_no])
-                col_no += 1
-                row_no = 0
-                placed = True
-                break
-        if len(ret_list) == N:
-            return ret_list
-        if col_no == 0 and len(ret_list) == 0:
-            return []
-        if not placed and len(ret_list) < N and len(ret_list) > 0:
-            prev_row = (ret_list[-1])[1]
-            rows.remove(prev_row)
-            negD.remove(prev_row - col_no + 1)
-            posD.remove(prev_row + col_no - 1)
-            ret_list.pop(-1)
-            col_no = col_no - 1
-            nqueens(N, rows, negD, posD, col_no, prev_row + 1, ret_list)
-            return ret_list
+queen = NQueen(N)
+res = queen.nQueen(1)
 
-
-if __name__ == "__main__":
-    i = 0
-    while i < N:
-        ret = nqueens(N=N, rows=set(), negD=set(), posD=set(), col_no=0,
-                      row_no=i, ret_list=[])
-        if ret:
-            print(ret)
-            if ret[0][1] == i + 1:
-                i += 1
-        i += 1
+for i in res:
+    print(i)
