@@ -9,11 +9,15 @@ def makeChange(coins, total):
         total (sum): the total sum needed to complete target
     """
 
-    dp = [total+1]*(total+1)
+    temp_value = 0
+    coins.sort(reverse=True)
 
-    dp[0] = 0
-    for a in range(total+1):
-        for c in coins:
-            if a-c >= 0:
-                dp[a] = min(dp[a], 1+dp[a-c])
-    return dp[total] if dp[total] != total+1 else -1
+    if total < 0:
+        return 0
+
+    for coin in coins:
+        if total % coin <= total:
+            temp_value += total // coin
+            total = total % coin
+
+    return temp_value if total == 0 else -1
